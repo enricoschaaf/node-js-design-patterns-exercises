@@ -28,9 +28,9 @@ function recursion(number, emitter, ticks, callback) {
 
 ticker(1000, (err, ticks) => {
   if (err) {
-    console.error(err.message)
+    console.error(err)
   }
   console.log(`Emitted ${ticks} ${ticks > 1 ? "ticks" : "tick"}.`)
 })
   .on("tick", () => console.log("Tick"))
-  .on("error", (err) => console.error(err.message))
+  .on("error", console.error)
