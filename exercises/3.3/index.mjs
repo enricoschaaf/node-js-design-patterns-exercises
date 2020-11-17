@@ -1,9 +1,8 @@
 import { EventEmitter } from "events"
+import { nextTick } from "process"
 
 function ticker(number, callback) {
   const emitter = new EventEmitter()
-
-  nextTick(() => emitter.emit("tick"))
 
   recursion(number, emitter, 1, callback)
 
@@ -15,8 +14,9 @@ function recursion(number, emitter, ticks, callback) {
     return callback(null, ticks)
   }
 
+  nextTick(() => emitter.emit("tick"))
+
   setTimeout(() => {
-    emitter.emit("tick")
     return recursion(number - 50, emitter, ticks + 1, callback)
   }, 50)
 }

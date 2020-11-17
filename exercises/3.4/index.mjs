@@ -6,20 +6,14 @@ const DivisibleBy5Error = new Error("Timestamp divisible by 5.")
 function ticker(number, callback) {
   const emitter = new EventEmitter()
 
-  if (Date.now() % 5 === 0) {
-    nextTick(() => emitter.emit("error", DivisibleBy5Error))
-    callback(DivisibleBy5Error, 0)
-  } else {
-    nextTick(() => emitter.emit("tick"))
-    recursion(number, emitter, 1, callback)
-  }
+  recursion(number, emitter, 1, callback)
 
   return emitter
 }
 
 function recursion(number, emitter, ticks, callback) {
   if (Date.now() % 5 === 0) {
-    emitter.emit("error", DivisibleBy5Error)
+    nextTick(() => emitter.emit("error", DivisibleBy5Error))
     return callback(DivisibleBy5Error, ticks)
   }
 
@@ -27,10 +21,9 @@ function recursion(number, emitter, ticks, callback) {
     return callback(null, ticks)
   }
 
-  setTimeout(() => {
-    emitter.emit("tick")
-    return recursion(number - 50, emitter, ticks + 1, callback)
-  }, 50)
+  nextTick(() => emitter.emit("tick"))
+
+  setTimeout(() => recursion(number - 50, emitter, ticks + 1, callback), 50)
 }
 
 ticker(1000, (err, ticks) => {
