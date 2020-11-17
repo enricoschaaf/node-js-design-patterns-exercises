@@ -31,6 +31,7 @@ class FindRegex extends EventEmitter {
         }
       })
     }
+
     return this
   }
 }
